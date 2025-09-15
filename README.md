@@ -4,14 +4,14 @@
 
 A modern web interface for the [ESP32 Marauder](https://github.com/justcallmekoko/ESP32Marauder) firmware. This project provides a user-friendly way to interact with your Marauder device through a web browser.
 
-🌐 **[Live Demo](https://michelangelomo.github.io/marauder-ui/)**
+🌐 **[Live Demo](https://mikystars.github.io/marauder-ui-pro/)**
 
-> This entire project, including the code and this README, has been written by Claude AI assistant.
+> ~~This entire project~~ Part of this project, including the code and this README, has been written by Claude AI assistant. There is algo a bunch of code made by hand and/or with the help of GitHub Copilot.
 
 ## Features
 
 - 🔌 Serial connection management
-- 📡 Real-time AP scanning and monitoring
+- 📡 Real-time AP and Bluetooth scanning and monitoring
 - 👥 Station detection and tracking
 - 📊 Dynamic AP and station list with sorting and filtering
 - 🖥️ Interactive terminal output
@@ -37,7 +37,7 @@ A modern web interface for the [ESP32 Marauder](https://github.com/justcallmekok
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/marauder-ui.git
+git clone https://github.com/yourusername/marauder-ui-pro.git
 cd marauder-ui
 ```
 
@@ -99,6 +99,22 @@ The interface supports all Marauder commands, including:
 - Search and filter capabilities
 - Sorting options
 
+### Bluetooth Monitoring
+- Real-time BT detection
+- Signal strength indicators
+- MAC address display
+- BT name display
+- Flipper detection
+- Airtag detection
+- Wardrive
+
+### Bluetooth Attacking
+- BLE Spam Apple Sour
+- BLE Spam Switpair
+- BLE Spam Samsung
+- BLE Spam Flipper
+- BLE Spam All
+
 ## Contributing
 
 Feel free to submit issues and enhancement requests!
@@ -107,7 +123,7 @@ Feel free to submit issues and enhancement requests!
 
 - ESP32 Marauder firmware by [justcallmekoko](https://github.com/justcallmekoko)
 - Interface design and implementation by Claude AI
-- Project maintenance by [michelangelomo](https://github.com/michelangelomo)
+- Project maintenance by: [michelangelomo](https://github.com/michelangelomo) and [Mikystars](https://github.com/Mikystars)
 
 ## License
 
