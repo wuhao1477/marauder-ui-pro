@@ -5,7 +5,7 @@
     <!-- Header -->
     <div
       class="bg-pink-400 rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 flex justify-between items-center">
-      <h1 class="text-3xl font-black">marauder-ui</h1>
+      <h1 class="text-3xl font-black">marauder-ui-pro</h1>
       <div class="flex items-center space-x-4">
         <!-- Demo Mode Button -->
         <button v-if="!serialConnection.isConnected.value" @click="toggleDemoMode"
@@ -32,7 +32,7 @@
       <div class="w-1/4 flex flex-col gap-4">
         <!-- Command Builder -->
         <div class="bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
-          <CommandBuilder />
+          <CommandBuilder :rightContentView="rightContentView" />
         </div>
 
         <!-- Workflows -->
@@ -51,10 +51,17 @@
 
       <!-- Right Content -->
       <div class="flex-1 flex flex-col gap-4">
-        <!-- APs List -->
-        <div
-          class="flex-1 bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 min-h-0">
-          <AccessPointTable />
+        <!-- Toggle Button -->
+        <div class="mb-2 flex justify-end">
+          <button @click="rightContentView = rightContentView === 'ap' ? 'bt' : 'ap'"
+            class="px-4 py-2 font-bold rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-blue-500 text-white hover:bg-blue-600">
+            {{ rightContentView === 'ap' ? 'Bluetooth' : 'WiFi APs' }}
+          </button>
+        </div>
+        <!-- APs or Bluetooth List -->
+        <div class="flex-1 bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 min-h-0">
+          <AccessPointTable v-if="rightContentView === 'ap'" />
+          <BluetoothDeviceTable v-else />
         </div>
       </div>
     </div>
@@ -77,11 +84,15 @@ import MobileBlocker from './components/MobileBlocker.vue'
 import CommandBuilder from './components/CommandBuilder.vue'
 import TerminalOutput from './components/TerminalOutput.vue'
 import AccessPointTable from './components/AccessPointTable.vue'
+import BluetoothDeviceTable from './components/BluetoothDeviceTable.vue'
 import WorkflowDialog from './components/WorkflowDialog.vue'
 import { useSerialConnection } from './utils/serialConnection'
 import { generateDemoData, generateDemoTerminalOutput } from './utils/demoData'
 const isDemoMode = ref(false)
 const demoUpdateInterval = ref(null)
+
+// State for right content view alternation
+const rightContentView = ref('ap')
 
 // Add mobile detection
 const isMobileDevice = ref(false)
