@@ -2,129 +2,129 @@
 
 ![Marauder Web Interface Screenshot](docs/homepage.png)
 
-A modern web interface for the [ESP32 Marauder](https://github.com/justcallmekoko/ESP32Marauder) firmware. This project provides a user-friendly way to interact with your Marauder device through a web browser.
+一个为 [ESP32 Marauder](https://github.com/justcallmekoko/ESP32Marauder) 固件打造的现代 Web 界面，通过浏览器即可与 Marauder 设备进行直观交互。
 
-🌐 **[Live Demo](https://mikystars.github.io/marauder-ui-pro/)**
+🌐 **[在线演示](https://mikystars.github.io/marauder-ui-pro/)**
 
-> ~~This entire project~~ Part of this project, including the code and this README, has been written by Claude AI assistant. There is algo a bunch of code made by hand and/or with the help of GitHub Copilot.
+> ~~整个项目~~ 本项目的部分内容（包括代码和此 README）由 Claude AI 协助完成，另外也包含人工编写以及 GitHub Copilot 的协助成果。
 
-## Features
+## 功能亮点
 
-- 🔌 Serial connection management
-- 📡 Real-time AP and Bluetooth scanning and monitoring
-- 👥 Station detection and tracking
-- 📊 Dynamic AP and station list with sorting and filtering
-- 🖥️ Interactive terminal output
-- 🎨 Modern neobrutalist design
-- 📱 Responsive layout
-- ⌨️ Command history
-- 🔍 Advanced filtering and sorting options
+- 🔌 串口连接管理
+- 📡 实时 AP 与蓝牙扫描/监控
+- 👥 终端与客户端检测追踪
+- 📊 动态 AP/STA 列表，支持排序与过滤
+- 🖥️ 交互式终端输出
+- 🎨 霓虹野性（neobrutalist）风格设计
+- 📱 响应式布局
+- ⌨️ 命令历史
+- 🔍 高级过滤与排序
 
-## Technical Details
+## 技术细节
 
-- Built with Vue 3 and Tailwind CSS
-- Uses Web Serial API for device communication
-- Reactive state management
-- Real-time data processing
-- Modular component architecture
+- 基于 Vue 3 与 Tailwind CSS 构建
+- 借助 Web Serial API 与设备通信
+- 响应式状态管理
+- 实时数据处理
+- 模块化组件架构
 
-## Requirements
+## 环境需求
 
-- A browser supporting the Web Serial API (Chrome, Edge)
-- An ESP32 device running the [Marauder firmware](https://github.com/justcallmekoko/ESP32Marauder)
+- 支持 Web Serial API 的浏览器（如 Chrome、Edge）
+- 运行 [Marauder 固件](https://github.com/justcallmekoko/ESP32Marauder) 的 ESP32 设备
 
-## Development
+## 开发指南
 
-1. Clone the repository:
+1. 克隆仓库：
 ```bash
 git clone https://github.com/yourusername/marauder-ui-pro.git
 cd marauder-ui
 ```
 
-2. Install dependencies:
+2. 安装依赖：
 ```bash
 npm install
 ```
 
-3. Run development server:
+3. 启动开发服务器：
 ```bash
 npm run dev
 ```
 
-4. Build for production:
+4. 生产构建：
 ```bash
 npm run build
 ```
 
-## Usage
+## 使用方式
 
-1. Connect your Marauder device to your computer
-2. Open the web interface
-3. Click "Connect" and select your device from the serial port list
-4. Use the command builder or enter custom commands
-5. Monitor results in the AP list and terminal output
+1. 将 Marauder 设备连接至电脑
+2. 打开 Web 界面
+3. 点击“连接”，从串口列表中选择设备
+4. 使用命令构建器或输入自定义命令
+5. 在 AP 列表与终端输出中观察结果
 
-## Commands
+## 命令支持
 
-The interface supports all Marauder commands, including:
+界面兼容全部 Marauder 命令，例如：
 
-- `scanap` - Scan for access points
-- `scansta` - Scan for stations
-- `stopscan` - Stop any ongoing scan
-- `list -a` - List detected access points
-- `sniffbeacon` - Sniff beacon frames
-- `sniffdeauth` - Sniff deauth frames
-- `sniffpmkid` - Sniff PMKID
-- And many more...
+- `scanap` - 扫描接入点
+- `scansta` - 扫描终端
+- `stopscan` - 停止当前扫描
+- `list -a` - 列出已检测的接入点
+- `sniffbeacon` - 侦听信标帧
+- `sniffdeauth` - 侦听去认证帧
+- `sniffpmkid` - 侦听 PMKID
+- 以及更多...
 
-## Features
+## 功能详解
 
-### Access Point Monitoring
-- Real-time AP detection
-- Signal strength indicators
-- Channel information
-- Connected stations tracking
-- Last seen timestamps
+### 接入点监控
+- 实时 AP 检测
+- 信号强度指示
+- 信道信息
+- 关联终端追踪
+- 最近一次发现时间戳
 
-### Station Tracking
-- Station-AP relationships
-- MAC address display
-- Station IDs
-- Last seen information
+### 终端追踪
+- STA-AP 关联
+- MAC 地址显示
+- 终端 ID
+- 最近一次发现信息
 
-### Interface Features
-- Command history
-- Terminal output
-- Compact and detailed views
-- Search and filter capabilities
-- Sorting options
+### 界面特性
+- 命令历史
+- 终端输出
+- 紧凑/详情视图
+- 搜索与过滤
+- 排序选项
 
-### Bluetooth Monitoring
-- Real-time BT detection
-- Signal strength indicators
-- MAC address display
-- BT name display
-- Flipper detection
-- Airtag detection
+### 蓝牙监控
+- 实时蓝牙检测
+- 信号强度显示
+- MAC 地址显示
+- 蓝牙名称展示
+- Flipper 识别
+- Airtag 识别
 - Wardrive
 
-### Bluetooth Attacking
+### 蓝牙攻击
 - BLE Spam Apple Sour
 - BLE Spam Switpair
 - BLE Spam Samsung
 - BLE Spam Flipper
 - BLE Spam All
 
-## Contributing
+## 参与贡献
 
-Feel free to submit issues and enhancement requests!
+欢迎提交问题与改进建议！
 
-## Credits
+## 鸣谢
 
-- ESP32 Marauder firmware by [justcallmekoko](https://github.com/justcallmekoko)
-- Interface design and implementation by Claude AI
-- Project maintenance by: [michelangelomo](https://github.com/michelangelomo) and [Mikystars](https://github.com/Mikystars)
+- [justcallmekoko](https://github.com/justcallmekoko) 的 ESP32 Marauder 固件
+- Claude AI 提供的界面设计与实现帮助
+- 项目维护者：[michelangelomo](https://github.com/michelangelomo) 与 [Mikystars](https://github.com/Mikystars)
 
-## License
+## 许可证
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+本项目基于 MIT License 授权，详情请参阅 LICENSE 文件。

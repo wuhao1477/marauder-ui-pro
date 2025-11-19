@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
+import { generateDemoData } from './demoData'
 
-// Create singleton instance
+// 创建单例实例
 const port = ref(null)
 const reader = ref(null)
 const isConnected = ref(false)
@@ -10,28 +11,28 @@ let buffer = ''
 
 export const useSerialConnection = () => {
   const connect = async () => {
-    console.log('Connect function called')
+    console.log('开始执行连接逻辑')
     try {
       if (!navigator.serial) {
-        console.error('Web Serial API not supported')
-        throw new Error('Web Serial API not supported in this browser')
+        console.error('当前环境不支持 Web Serial API')
+        throw new Error('该浏览器不支持 Web Serial API')
       }
 
-      console.log('Requesting port...')
+      console.log('正在请求串口访问权限...')
       port.value = await navigator.serial.requestPort()
-      console.log('Port selected:', port.value)
+      console.log('已选择串口:', port.value)
 
-      console.log('Opening port...')
+      console.log('正在打开串口...')
       await port.value.open({ baudRate: 115200 })
-      console.log('Port opened successfully')
+      console.log('串口打开成功')
 
       isConnected.value = true
-      addToTerminal('✓ Connected to serial port', 'success')
+      addToTerminal('✓ 已连接串口', 'success')
       startReading()
     } catch (error) {
-      console.error('Connection error:', error)
+      console.error('连接错误：', error)
       isConnected.value = false
-      addToTerminal(`✗ Failed to connect: ${error.message}`, 'error')
+      addToTerminal(`✗ 连接失败：${error.message}`, 'error')
       throw error
     }
   }
@@ -46,10 +47,10 @@ export const useSerialConnection = () => {
         port.value = null
         reader.value = null
         isConnected.value = false
-        addToTerminal('✗ Disconnected from serial port', 'error')
+        addToTerminal('✗ 已断开串口连接', 'error')
       } catch (error) {
-        console.error('Disconnection error:', error)
-        addToTerminal(`✗ Error disconnecting: ${error.message}`, 'error')
+        console.error('断开错误：', error)
+        addToTerminal(`✗ 断开时出现错误：${error.message}`, 'error')
       }
     }
   }
@@ -67,12 +68,12 @@ export const useSerialConnection = () => {
             if (done) break
 
             if (value) {
-              // Accumulate the buffer and process complete lines
+              // 累加缓冲区并处理完整行
               buffer += value
               const lines = buffer.split('\n')
-              buffer = lines.pop() // Keep the last incomplete line in buffer
+              buffer = lines.pop() // 保留最后一行未完成内容
 
-              // Process complete lines
+              // 处理完整行
               lines.forEach(line => {
                 if (line.trim()) {
                   addToTerminal(line.trim())
@@ -81,14 +82,14 @@ export const useSerialConnection = () => {
             }
           }
         } catch (error) {
-          console.error('Read error:', error)
+          console.error('读取错误：', error)
         } finally {
           if (reader.value) {
             reader.value.releaseLock()
           }
         }
       } catch (error) {
-        addToTerminal(`✗ Read error: ${error.message}`, 'error')
+        addToTerminal(`✗ 读取错误：${error.message}`, 'error')
         break
       }
     }
@@ -97,13 +98,13 @@ export const useSerialConnection = () => {
   const sendCommand = async (command) => {
     console.log(isDemoMode.value)
     if (isDemoMode.value) {
-      // Handle demo commands
+      // 处理演示模式命令
       addToTerminal(`> ${command}`, 'command')
 
-      // Simulate responses based on command
+      // 根据命令模拟响应
       switch (command) {
         case 'scanap':
-          addToTerminal('Starting AP scan. Stop with stopscan')
+          addToTerminal('正在扫描 AP，使用 stopscan 可终止')
           setTimeout(() => {
             generateDemoData().forEach(ap => {
               addToTerminal(`RSSI: ${ap.rssi} Ch: ${ap.channel} BSSID: ${ap.bssid} ESSID: ${ap.essid}`)
@@ -116,16 +117,16 @@ export const useSerialConnection = () => {
           })
           break
         case 'stopscan':
-          addToTerminal('Stopping all scans...')
+          addToTerminal('正在停止所有扫描...')
           break
         default:
-          addToTerminal(`Executing: ${command}`)
+          addToTerminal(`执行：${command}`)
       }
       return
     }
 
     if (!command || !port.value) {
-      addToTerminal('✗ No command or not connected', 'error')
+      addToTerminal('✗ 未连接或无命令可执行', 'error')
       return
     }
 
@@ -137,18 +138,18 @@ export const useSerialConnection = () => {
       addToTerminal(`> ${command}`, 'command')
       writer.releaseLock()
     } catch (error) {
-      console.error('Send error:', error)
-      addToTerminal(`✗ Failed to send command: ${error.message}`, 'error')
+      console.error('发送错误：', error)
+      addToTerminal(`✗ 发送命令失败：${error.message}`, 'error')
     }
   }
 
   const addToTerminal = (text, type = 'normal') => {
-    console.log('Adding to terminal:', text, type) // Debug log
+    console.log('写入终端：', text, type) // 调试日志
     if (text.trim()) {
       const lineClass = getTypeClass(type)
       terminalOutput.value = [...terminalOutput.value, `<span class="${lineClass}">${text}</span>`]
 
-      // Keep only last 1000 lines
+      // 仅保留最近 1000 行
       if (terminalOutput.value.length > 1000) {
         terminalOutput.value = terminalOutput.value.slice(-1000)
       }
@@ -166,7 +167,7 @@ export const useSerialConnection = () => {
   }
 
   return {
-    isConnected: computed(() => isConnected.value), // Make it computed
+    isConnected: computed(() => isConnected.value), // 暴露响应式连接状态
     isDemoMode,
     terminalOutput,
     connect,

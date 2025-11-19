@@ -2,7 +2,7 @@
   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div
       class="bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col">
-      <!-- Header - Fixed -->
+      <!-- 标题（固定） -->
       <div class="flex justify-between items-center mb-4">
         <div>
           <h2 class="text-xl font-bold">{{ workflow.name }}</h2>
@@ -13,7 +13,7 @@
         </button>
       </div>
 
-      <!-- Steps - Scrollable -->
+      <!-- 步骤（可滚动） -->
       <div class="flex-1 overflow-y-auto min-h-0 mb-6">
         <div class="space-y-4">
           <div v-for="(step, index) in workflow.steps" :key="index"
@@ -25,14 +25,14 @@
             <div class="flex-1 space-y-2">
               <p class="text-sm">{{ step.description }}</p>
 
-              <!-- Command preview -->
+              <!-- 命令预览 -->
               <div class="font-mono text-sm bg-gray-100 p-2 rounded break-all">
                 {{ getFormattedCommand(step) }}
               </div>
 
-              <!-- Input fields -->
+              <!-- 输入字段 -->
               <div v-if="step.requiresInput" class="space-y-2">
-                <!-- First input -->
+                <!-- 第一个输入框 -->
                 <div class="space-y-1">
                   <label class="text-sm font-medium text-gray-700">{{ step.inputLabel }}</label>
                   <input v-model="inputs[index]" type="text" :placeholder="step.placeholder"
@@ -40,7 +40,7 @@
                   <p v-if="step.help" class="text-xs text-gray-500">{{ step.help }}</p>
                 </div>
 
-                <!-- Second input if required -->
+                <!-- 若需要第二个输入框 -->
                 <div v-if="step.requiresSecondInput" class="space-y-1">
                   <label class="text-sm font-medium text-gray-700">{{ step.secondInputLabel }}</label>
                   <input v-model="secondInputs[index]" type="text" :placeholder="step.secondPlaceholder"
@@ -52,21 +52,21 @@
         </div>
       </div>
 
-      <!-- Actions - Fixed at bottom -->
+      <!-- 底部操作 -->
       <div class="flex justify-between items-center pt-4 border-t border-gray-200">
-        <!-- Warning for destructive workflows -->
+        <!-- 危险提示 -->
         <div v-if="isDestructiveWorkflow" class="text-sm text-orange-600">
-          ⚠️ This workflow may disrupt network connectivity
+          ⚠️ 该工作流可能影响网络连接
         </div>
 
         <div class="flex space-x-4">
           <button @click="$emit('close')"
             class="px-4 py-2 text-sm font-bold bg-gray-100 rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-            Cancel
+            取消
           </button>
           <button @click="executeWorkflow" :disabled="!isValid"
             class="px-4 py-2 text-sm font-bold bg-blue-500 text-white rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:cursor-not-allowed">
-            Execute Workflow
+            执行工作流
           </button>
         </div>
       </div>
@@ -75,7 +75,7 @@
 </template>
 
 <style scoped>
-/* Custom scrollbar styling */
+/* 自定义滚动条 */
 .overflow-y-auto {
   scrollbar-width: thin;
   scrollbar-color: #CBD5E1 transparent;
@@ -94,7 +94,7 @@
   border-radius: 3px;
 }
 
-/* Smooth scrolling */
+/* 平滑滚动 */
 .overflow-y-auto {
   scroll-behavior: smooth;
 }
@@ -137,7 +137,7 @@ const getFormattedCommand = (step) => {
   const index = props.workflow.steps.indexOf(step)
   let command = step.command
 
-  // Handle special case for SSID generation
+  // SSID 生成特殊情况
   if (step.command.includes('{type}') && step.command.includes('{value}')) {
     const [type, value] = (inputs.value[index] || '').split(' ')
     command = command.replace('{type}', type || '{type}')
@@ -145,7 +145,7 @@ const getFormattedCommand = (step) => {
     return command
   }
 
-  // Replace all other placeholders
+  // 替换其他占位符
   command = command.replace(/{([^}]+)}/g, (match, key) => {
     if (key === 'source' || key === 'dest') {
       return secondInputs.value[index] || `{${key}}`
@@ -163,7 +163,7 @@ const executeWorkflow = () => {
     const index = props.workflow.steps.indexOf(step)
     let command = step.command
 
-    // Handle special case for SSID generation
+    // SSID 生成特殊情况
     if (step.command.includes('{type}') && step.command.includes('{value}')) {
       const [type, value] = inputs.value[index].split(' ')
       command = command.replace('{type}', type)
@@ -171,7 +171,7 @@ const executeWorkflow = () => {
       return command
     }
 
-    // Replace all other placeholders
+    // 替换其他占位符
     command = command.replace(/{([^}]+)}/g, (match, key) => {
       if (key === 'source') return inputs.value[index]
       if (key === 'dest') return secondInputs.value[index]

@@ -3,30 +3,30 @@
     <div class="flex flex-col gap-4 mb-4">
       <div class="flex justify-between items-center">
         <div class="flex items-center space-x-2">
-          <h2 class="text-xl font-bold">Bluetooth Devices</h2>
-          <span class="text-sm text-gray-600">({{ devices.size }} devices)</span>
+          <h2 class="text-xl font-bold">蓝牙设备</h2>
+          <span class="text-sm text-gray-600">（{{ devices.size }} 个设备）</span>
         </div>
         <div class="flex items-center space-x-2">
           <button @click="refreshList"
             class="px-3 py-1 text-sm font-bold bg-blue-500 text-white rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
             :disabled="!isConnected">
-            Refresh
+            刷新
           </button>
           <button @click="clearTable"
             class="px-3 py-1 text-sm font-bold bg-orange-500 text-white rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-            Clear
+            清空
           </button>
         </div>
       </div>
       <div class="flex space-x-4">
         <div class="flex-1">
-          <input type="text" v-model="search" placeholder="Search by Name, MAC, or Vendor..."
+          <input type="text" v-model="search" placeholder="按名称、MAC 或厂商搜索..."
             class="w-full px-3 py-2 text-sm bg-white rounded border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
         <select v-model="sortBy"
           class="px-3 py-2 text-sm bg-white rounded border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="rssi">Sort by Signal</option>
-          <option value="name">Sort by Name</option>
+          <option value="rssi">按信号排序</option>
+          <option value="name">按名称排序</option>
         </select>
       </div>
     </div>
@@ -36,10 +36,10 @@
           <tr>
             <th class="px-2 py-1 text-left border-b-2 border-black font-bold w-12">#</th>
             <th class="px-2 py-1 text-left border-b-2 border-black font-bold">MAC</th>
-            <th class="px-2 py-1 text-left border-b-2 border-black font-bold">Name</th>
+            <th class="px-2 py-1 text-left border-b-2 border-black font-bold">名称</th>
             <th class="px-2 py-1 text-left border-b-2 border-black w-16 font-bold">RSSI</th>
-            <th class="px-2 py-1 text-left border-b-2 border-black w-24 font-bold">Vendor</th>
-            <th class="px-2 py-1 text-left border-b-2 border-black w-24 font-bold">Last Seen</th>
+            <th class="px-2 py-1 text-left border-b-2 border-black w-24 font-bold">厂商</th>
+            <th class="px-2 py-1 text-left border-b-2 border-black w-24 font-bold">最近出现</th>
           </tr>
         </thead>
         <tbody>
@@ -48,8 +48,8 @@
               <td class="px-2 py-1 font-mono">{{ device.index }}</td>
               <td class="px-2 py-1 font-mono">{{ device.mac || '-' }}</td>
               <td class="px-2 py-1 font-medium">{{ device.name || '-' }}</td>
-              <td class="px-2 py-1">{{ device.rssi || 'N/A' }}</td>
-              <td class="px-2 py-1">{{ device.vendor || 'Unknown' }}</td>
+              <td class="px-2 py-1">{{ device.rssi || '无' }}</td>
+              <td class="px-2 py-1">{{ device.vendor || '未知' }}</td>
               <td class="px-2 py-1 text-gray-600">{{ formatLastSeen(device.lastSeen) }}</td>
             </tr>
           </template>
@@ -91,7 +91,7 @@ const sortedDevices = computed(() => {
 })
 
 const formatLastSeen = (date) => {
-  if (!date) return 'N/A'
+  if (!date) return '无'
   const seconds = Math.floor((new Date() - date) / 1000)
   if (seconds < 60) return `${seconds}s`
   if (seconds < 3600) return `${Math.floor(seconds / 60)}m`
@@ -104,7 +104,7 @@ const clearTable = () => {
 
 const refreshList = async () => {
   if (isConnected.value) {
-    await sendCommand('sniffbt') // Comando para escanear y mostrar dispositivos Bluetooth
+    await sendCommand('sniffbt') // 触发蓝牙扫描与展示
   }
 }
 
@@ -112,19 +112,18 @@ watch(() => terminalOutput.value, (newLines) => {
   let idx = 1;
   newLines.forEach(line => {
     const plainLine = line.replace(/<[^>]+>/g, '').trim();
-    // Parse formato: RSSI: <valor> Device: <mac|name>
-  const match = plainLine.match(/^RSSI:\s*(-?\d+)\s*Device:\s*(.+)$/);
+    // 解析格式：RSSI: <值> Device: <mac|name>
+    const match = plainLine.match(/^RSSI:\s*(-?\d+)\s*Device:\s*(.+)$/);
     if (match) {
       const [_, rssi, device] = match;
       const isMac = /^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$/.test(device);
       let mac = '-';
       let name = '-';
       let key = device;
-      // Buscar si ya existe un objeto con la misma MAC o nombre
+      // 查找同 MAC 或名称的既有记录
       let existing = undefined;
       if (isMac) {
         mac = device;
-        // Buscar por MAC
         existing = Array.from(devices.value.values()).find(d => d.mac === mac);
         if (existing) {
           name = existing.name || '-';
@@ -132,7 +131,6 @@ watch(() => terminalOutput.value, (newLines) => {
         }
       } else {
         name = device;
-        // Buscar por nombre
         existing = Array.from(devices.value.values()).find(d => d.name === name);
         if (existing) {
           mac = existing.mac || '-';

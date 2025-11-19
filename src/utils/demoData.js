@@ -15,15 +15,15 @@ function generateSSID() {
 }
 
 function generateRSSI() {
-    return -(Math.floor(Math.random() * 60) + 30) // -30 to -90
+    return -(Math.floor(Math.random() * 60) + 30) // -30 到 -90
 }
 
 function generateChannel() {
-    return Math.floor(Math.random() * 13) + 1 // 1-13
+    return Math.floor(Math.random() * 13) + 1 // 信道 1-13
 }
 
 export function generateDemoData() {
-    const apCount = 10 + Math.floor(Math.random() * 10) // 10-20 APs
+    const apCount = 10 + Math.floor(Math.random() * 10) // 10-20 个 AP
     const aps = []
 
     for (let i = 0; i < apCount; i++) {
@@ -39,14 +39,14 @@ export function generateDemoData() {
             stations: []
         }
 
-        // Add random stations (0-5 per AP)
+        // 为每个 AP 随机添加 0-5 个终端
         const stationCount = Math.floor(Math.random() * 6)
         for (let j = 0; j < stationCount; j++) {
             ap.stations.push({
                 id: j,
                 mac: generateMAC(),
                 vendor: VENDORS[Math.floor(Math.random() * VENDORS.length)],
-                lastSeen: new Date(Date.now() - Math.random() * 3600000) // Up to 1 hour ago
+                lastSeen: new Date(Date.now() - Math.random() * 3600000) // 最多回溯 1 小时
             })
         }
 
@@ -58,10 +58,10 @@ export function generateDemoData() {
 
 export function generateDemoTerminalOutput() {
     return [
-        '<span class="text-blue-400">✓ Connected to serial port</span>',
+        '<span class="text-blue-400">✓ 已连接串口</span>',
         '<span class="text-green-400">> scanap</span>',
-        '<span class="text-green-400">Starting AP scan. Stop with stopscan</span>',
-        '<span class="text-green-400">Clearing APs...0</span>',
+        '<span class="text-green-400">开始扫描 AP，使用 stopscan 可终止</span>',
+        '<span class="text-green-400">清理 AP 列表...0</span>',
         ...generateDemoData().map(ap =>
             `<span class="text-green-400">RSSI: ${ap.rssi} Ch: ${ap.channel} BSSID: ${ap.bssid} ESSID: ${ap.essid}</span>`
         ),

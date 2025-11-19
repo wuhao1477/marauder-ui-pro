@@ -51,7 +51,7 @@ export const useCommandHistory = () => {
     localStorage.removeItem('commandHistory')
   }
 
-  // Load history when initialized
+  // 初始化时加载历史
   loadFromLocalStorage()
 
   return {
