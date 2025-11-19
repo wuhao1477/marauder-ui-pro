@@ -181,6 +181,9 @@ const executeWorkflow = () => {
     return command
   })
 
-  emit('execute', commands)
+  emit('execute', {
+    workflow: props.workflow,
+    commands
+  })
 }
 </script>
