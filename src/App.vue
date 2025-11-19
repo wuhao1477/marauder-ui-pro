@@ -155,6 +155,36 @@ const workflows = [
     ]
   },
   {
+    id: 'targeted-eapol-sniff',
+    name: '定向 EAPOL 握手捕获',
+    description: '填入目标 AP 后自动执行去认证干扰并启动 sniffeapol，握手捕获后提醒下载。',
+    postExecuteActions: [
+      {
+        type: 'alert',
+        message: 'sniffeapol 已启动，请在终端中等待握手捕获提示。'
+      },
+      {
+        type: 'confirm',
+        message: '握手捕获完成后点击“确定”即可发送下载命令（若暂不需要可点击“取消”）。',
+        commands: ['pcap -d eapol']
+      }
+    ],
+    steps: [
+      { command: 'scanap', description: '扫描接入点' },
+      { command: 'list -a', description: '列出可用接入点' },
+      {
+        command: 'select -a {targets}',
+        description: '选择目标接入点',
+        requiresInput: true,
+        inputLabel: '目标 AP 索引（逗号分隔）',
+        placeholder: '0,1,2'
+      },
+      { command: 'list -a', description: '确认所选接入点' },
+      { command: 'attack -t deauth', description: '对目标 AP 发起去认证以诱发重新握手' },
+      { command: 'sniffeapol -d -l', description: '执行定向 EAPOL 嗅探并锁定握手' }
+    ]
+  },
+  {
     id: 'random-beacon-spam-list',
     name: '随机信标骚扰（列表）',
     description: '生成随机 SSID 列表，并用该列表广播信标帧。',
@@ -282,18 +312,46 @@ const workflows = [
   }
 ]
 
+const delay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms))
+
+const runPostExecuteActions = async (workflowRef) => {
+  if (!workflowRef?.postExecuteActions?.length) return
+
+  for (const action of workflowRef.postExecuteActions) {
+    if (action.type === 'alert') {
+      if (typeof window !== 'undefined') {
+        window.alert(action.message)
+      }
+    } else if (action.type === 'confirm') {
+      if (typeof window !== 'undefined') {
+        const confirmed = window.confirm(action.message)
+        if (confirmed && Array.isArray(action.commands)) {
+          for (const confirmCommand of action.commands) {
+            await serialConnection.sendCommand(confirmCommand)
+            await delay()
+          }
+        }
+      }
+    }
+  }
+}
+
 const openWorkflow = (workflow) => {
   console.log('正在打开工作流：', workflow) // 调试日志
   selectedWorkflow.value = workflow
 }
 
-const executeWorkflow = async (commands) => {
+const executeWorkflow = async ({ workflow, commands }) => {
   console.log('执行命令序列：', commands) // 调试日志
+  const workflowRef = workflow || selectedWorkflow.value
+
   for (const command of commands) {
     await serialConnection.sendCommand(command)
     // 命令之间留出短暂间隔
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await delay()
   }
+
+  await runPostExecuteActions(workflowRef)
   selectedWorkflow.value = null
 }
 
