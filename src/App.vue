@@ -157,7 +157,7 @@ const workflows = [
   {
     id: 'targeted-eapol-sniff',
     name: '定向 EAPOL 握手捕获',
-    description: '填入目标 AP 后自动启动 sniffeapol 并在握手捕获后提醒下载。',
+    description: '填入目标 AP 后自动执行去认证干扰并启动 sniffeapol，握手捕获后提醒下载。',
     postExecuteActions: [
       {
         type: 'alert',
@@ -180,6 +180,7 @@ const workflows = [
         placeholder: '0,1,2'
       },
       { command: 'list -a', description: '确认所选接入点' },
+      { command: 'attack -t deauth', description: '对目标 AP 发起去认证以诱发重新握手' },
       { command: 'sniffeapol -d -l', description: '执行定向 EAPOL 嗅探并锁定握手' }
     ]
   },
