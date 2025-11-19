@@ -3,63 +3,63 @@
       <div class="grid gap-3">
         <div class="grid grid-cols-2 gap-3">
           <button @click="emitCommand('sniffraw')" class="command-btn">
-            Raw Sniff
+            原始嗅探
           </button>
           <button @click="emitCommand('sniffbeacon')" class="command-btn">
-            Beacon Sniff
+            信标嗅探
           </button>
           <button @click="emitCommand('sniffprobe')" class="command-btn">
-            Probe Sniff
+            探测嗅探
           </button>
           <button @click="emitCommand('sniffpwn')" class="command-btn">
-            PWN Sniff
+            PWN 嗅探
           </button>
           <button @click="emitCommand('sniffesp')" class="command-btn">
-            ESP Sniff
+            ESP 嗅探
           </button>
           <button @click="emitCommand('sniffdeauth')" class="command-btn">
-            Deauth Sniff
+            去认证嗅探
           </button>
         </div>
-  
+
         <div class="bg-white p-4 rounded-lg border-2 border-black mt-3">
-          <h3 class="font-bold mb-2">PMKID Sniff Options</h3>
+          <h3 class="font-bold mb-2">PMKID 嗅探选项</h3>
           <div class="space-y-3">
             <div>
-              <label class="block text-sm mb-1">Channel:</label>
-              <input v-model="channel" type="number" class="input-field" placeholder="Channel number">
+              <label class="block text-sm mb-1">信道：</label>
+              <input v-model="channel" type="number" class="input-field" placeholder="信道编号">
             </div>
             <div class="flex space-x-4">
               <label class="flex items-center">
                 <input v-model="deauth" type="checkbox" class="mr-2">
-                Deauth
+                去认证
               </label>
               <label class="flex items-center">
                 <input v-model="loop" type="checkbox" class="mr-2">
-                Loop
+                循环
               </label>
             </div>
             <button @click="buildPmkidCommand" class="command-btn w-full">
-              Start PMKID Sniff
+              启动 PMKID 嗅探
             </button>
           </div>
         </div>
       </div>
     </div>
   </template>
-  
+
   <script setup>
   import { ref } from 'vue'
-  
+
   const emit = defineEmits(['command-built'])
   const channel = ref('')
   const deauth = ref(false)
   const loop = ref(false)
-  
+
   const emitCommand = (command) => {
     emit('command-built', command)
   }
-  
+
   const buildPmkidCommand = () => {
     let cmd = 'sniffpmkid'
     if (channel.value) cmd += ` -c ${channel.value}`

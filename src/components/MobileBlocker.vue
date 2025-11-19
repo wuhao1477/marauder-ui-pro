@@ -4,13 +4,12 @@
         <div
             class="bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 max-w-md w-full">
             <div class="text-4xl mb-4">📱❌</div>
-            <h1 class="text-2xl font-bold mb-4">Desktop Only</h1>
+            <h1 class="text-2xl font-bold mb-4">仅限桌面端</h1>
             <p class="text-gray-600 mb-4">
-                This application requires Web Serial API, which is only available on desktop browsers like Chrome or
-                Edge.
+                此应用依赖 Web Serial API，仅在 Chrome、Edge 等桌面浏览器中可用。
             </p>
             <div class="text-sm text-gray-500">
-                Please visit this site from a desktop computer to use the WiFi Marauder interface.
+                请在桌面电脑上访问，以使用 WiFi Marauder 界面。
             </div>
         </div>
     </div>
@@ -27,13 +26,13 @@ onMounted(() => {
             window.innerWidth <= 768
     }
 
-    // Check on mount
+    // 初始化时检测
     checkMobile()
 
-    // Check on resize
+    // 监听窗口尺寸
     window.addEventListener('resize', checkMobile)
 
-    // Cleanup
+    // 清理监听器
     onUnmounted(() => {
         window.removeEventListener('resize', checkMobile)
     })

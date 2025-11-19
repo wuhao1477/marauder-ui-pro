@@ -2,43 +2,43 @@
   <div class="h-screen flex flex-col bg-yellow-50 p-4 gap-4">
     <MobileBlocker />
 
-    <!-- Header -->
+    <!-- 页眉 -->
     <div
       class="bg-pink-400 rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 flex justify-between items-center">
       <h1 class="text-3xl font-black">marauder-ui-pro</h1>
       <div class="flex items-center space-x-4">
-        <!-- Demo Mode Button -->
+        <!-- 演示模式按钮 -->
         <button v-if="!serialConnection.isConnected.value" @click="toggleDemoMode"
           class="px-3 py-1 text-sm font-bold rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
           :class="isDemoMode ? 'bg-purple-500 text-white' : 'bg-white'">
-          {{ isDemoMode ? 'Exit Demo' : 'Try Demo' }}
+          {{ isDemoMode ? '退出演示' : '体验演示' }}
         </button>
 
-        <span class="text-sm">Status:</span>
+        <span class="text-sm">状态：</span>
         <button @click="handleConnect" v-if="!serialConnection.isConnected.value"
           class="px-3 py-1 bg-green-500 text-white text-sm font-bold rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-          Connect
+          连接
         </button>
         <button @click="handleDisconnect" v-if="serialConnection.isConnected.value"
           class="px-3 py-1 bg-red-500 text-white text-sm font-bold rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-          Disconnect
+          断开
         </button>
       </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- 主体内容 -->
     <div class="flex-1 flex gap-4 min-h-0">
-      <!-- Left Sidebar -->
+      <!-- 左侧边栏 -->
       <div class="w-1/4 flex flex-col gap-4">
-        <!-- Command Builder -->
+        <!-- 命令构建器 -->
         <div class="bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
           <CommandBuilder :rightContentView="rightContentView" />
         </div>
 
-        <!-- Workflows -->
+        <!-- 工作流 -->
         <div
           class="flex-1 bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 overflow-auto">
-          <h2 class="text-xl font-bold mb-4">Workflows</h2>
+          <h2 class="text-xl font-bold mb-4">工作流</h2>
           <div class="space-y-2">
             <button v-for="workflow in workflows" :key="workflow.id" @click="openWorkflow(workflow)"
               class="w-full px-3 py-2 text-left text-sm bg-gray-100 hover:bg-gray-200 rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
@@ -49,16 +49,16 @@
       </div>
 
 
-      <!-- Right Content -->
+      <!-- 右侧内容 -->
       <div class="flex-1 flex flex-col gap-4">
-        <!-- Toggle Button -->
+        <!-- 切换按钮 -->
         <div class="mb-2 flex justify-end">
           <button @click="rightContentView = rightContentView === 'ap' ? 'bt' : 'ap'"
             class="px-4 py-2 font-bold rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-blue-500 text-white hover:bg-blue-600">
-            {{ rightContentView === 'ap' ? 'Bluetooth' : 'WiFi APs' }}
+            {{ rightContentView === 'ap' ? '蓝牙设备' : 'WiFi 接入点' }}
           </button>
         </div>
-        <!-- APs or Bluetooth List -->
+        <!-- AP 或蓝牙列表 -->
         <div class="flex-1 bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 min-h-0">
           <AccessPointTable v-if="rightContentView === 'ap'" />
           <BluetoothDeviceTable v-else />
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <!-- Terminal Output -->
+    <!-- 终端输出 -->
     <div class="h-64 bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
       <TerminalOutput />
     </div>
@@ -91,10 +91,10 @@ import { generateDemoData, generateDemoTerminalOutput } from './utils/demoData'
 const isDemoMode = ref(false)
 const demoUpdateInterval = ref(null)
 
-// State for right content view alternation
+// 右侧内容视图切换状态
 const rightContentView = ref('ap')
 
-// Add mobile detection
+// 移动端检测
 const isMobileDevice = ref(false)
 
 onMounted(() => {
@@ -103,13 +103,13 @@ onMounted(() => {
       window.innerWidth <= 768
   }
 
-  // Check on mount
+  // 挂载时检测
   checkMobile()
 
-  // Check on resize
+  // 监听窗口尺寸
   window.addEventListener('resize', checkMobile)
 
-  // Cleanup
+  // 清理事件
   onUnmounted(() => {
     window.removeEventListener('resize', checkMobile)
   })
@@ -120,198 +120,198 @@ const selectedWorkflow = ref(null)
 const workflows = [
   {
     id: 'random-beacon-spam-list',
-    name: 'Random Beacon Spam (List)',
-    description: 'Generates a list of random SSIDs and broadcasts beacon frames using this list.',
+    name: '随机信标骚扰（列表）',
+    description: '生成随机 SSID 列表，并用该列表广播信标帧。',
     steps: [
-      { command: 'ssid -a -g 50', description: 'Generate 50 random SSIDs' },
-      { command: 'list -s', description: 'Display generated SSIDs' },
-      { command: 'attack -t beacon -l', description: 'Execute beacon list attack' }
+      { command: 'ssid -a -g 50', description: '生成 50 个随机 SSID' },
+      { command: 'list -s', description: '查看生成的 SSID' },
+      { command: 'attack -t beacon -l', description: '执行列表信标攻击' }
     ]
   },
   {
     id: 'random-beacon-spam-auto',
-    name: 'Random Beacon Spam (Auto)',
-    description: 'Broadcasts beacon frames with automatically generated random SSIDs.',
+    name: '随机信标骚扰（自动）',
+    description: '自动生成随机 SSID 并广播信标帧。',
     steps: [
-      { command: 'attack -t beacon -r', description: 'Execute random beacon spam attack' }
+      { command: 'attack -t beacon -r', description: '执行随机信标骚扰攻击' }
     ]
   },
   {
     id: 'targeted-pmkid-sniff',
-    name: 'Targeted Active PMKID Sniff',
-    description: 'Performs targeted PMKID sniffing on selected access points.',
+    name: '定向主动 PMKID 嗅探',
+    description: '针对所选接入点执行 PMKID 嗅探。',
     steps: [
-      { command: 'scanap', description: 'Scan for access points' },
-      { command: 'list -a', description: 'List available access points' },
+      { command: 'scanap', description: '扫描接入点' },
+      { command: 'list -a', description: '列出可用接入点' },
       {
         command: 'select -a {targets}',
-        description: 'Select target access points',
+        description: '选择目标接入点',
         requiresInput: true,
-        inputLabel: 'Target AP indices (comma-separated)',
+        inputLabel: '目标 AP 索引（逗号分隔）',
         placeholder: '0,1,2'
       },
-      { command: 'list -a', description: 'Verify selected access points' },
-      { command: 'sniffpmkid -d -l', description: 'Execute targeted PMKID sniff' }
+      { command: 'list -a', description: '确认所选接入点' },
+      { command: 'sniffpmkid -d -l', description: '执行定向 PMKID 嗅探' }
     ]
   },
   {
     id: 'random-beacon-spam-list',
-    name: 'Random Beacon Spam (List)',
-    description: 'Generates a list of random SSIDs and broadcasts beacon frames using this list.',
+    name: '随机信标骚扰（列表）',
+    description: '生成随机 SSID 列表，并用该列表广播信标帧。',
     steps: [
-      { command: 'ssid -a -g 50', description: 'Generate 50 random SSIDs' },
-      { command: 'list -s', description: 'Display generated SSIDs' },
-      { command: 'attack -t beacon -l', description: 'Execute beacon list attack' }
+      { command: 'ssid -a -g 50', description: '生成 50 个随机 SSID' },
+      { command: 'list -s', description: '查看生成的 SSID' },
+      { command: 'attack -t beacon -l', description: '执行列表信标攻击' }
     ]
   },
   {
     id: 'list-beacon-spam',
-    name: 'List Beacon Spam',
-    description: 'Creates a custom list of SSIDs and broadcasts beacon frames using this list.',
+    name: '自定义列表信标骚扰',
+    description: '创建自定义 SSID 列表并广播信标帧。',
     steps: [
       {
         command: 'ssid -a -{type} {value}',
-        description: 'Add SSIDs to the list',
+        description: '向列表添加 SSID',
         requiresInput: true,
-        inputLabel: 'SSID Generation',
-        placeholder: 'g 3 or n MySSID',
-        help: 'Use "g NUMBER" for random or "n NAME" for specific SSID'
+        inputLabel: 'SSID 生成方式',
+        placeholder: 'g 3 或 n MySSID',
+        help: '使用 "g 数量" 生成随机 SSID，或用 "n 名称" 指定 SSID'
       },
-      { command: 'list -s', description: 'Display generated SSIDs' },
-      { command: 'attack -t beacon -l', description: 'Execute beacon list attack' }
+      { command: 'list -s', description: '查看生成的 SSID' },
+      { command: 'attack -t beacon -l', description: '执行列表信标攻击' }
     ]
   },
   {
     id: 'ap-clone-spam',
-    name: 'AP Clone Spam',
-    description: 'Clones nearby APs and broadcasts them with slightly modified names.',
+    name: 'AP 克隆骚扰',
+    description: '克隆附近 AP 并以稍作修改的名称广播。',
     steps: [
-      { command: 'scanap', description: 'Scan for access points' },
-      { command: 'list -a', description: 'List available access points' },
+      { command: 'scanap', description: '扫描接入点' },
+      { command: 'list -a', description: '列出可用接入点' },
       {
         command: 'select -a {targets}',
-        description: 'Select target access points',
+        description: '选择目标接入点',
         requiresInput: true,
-        inputLabel: 'Target AP indices (comma-separated)',
+        inputLabel: '目标 AP 索引（逗号分隔）',
         placeholder: '0,1,2'
       },
-      { command: 'list -a', description: 'Verify selected access points' },
-      { command: 'attack -t beacon -a', description: 'Execute AP clone spam attack' }
+      { command: 'list -a', description: '确认所选接入点' },
+      { command: 'attack -t beacon -a', description: '执行克隆信标骚扰' }
     ]
   },
   {
     id: 'deauth-flood',
-    name: 'Deauthentication Flood',
-    description: 'Broadcasts deauthentication frames to all clients of selected APs.',
+    name: '去认证洪泛',
+    description: '向所选 AP 的全部客户端广播去认证帧。',
     steps: [
-      { command: 'scanap', description: 'Scan for access points' },
-      { command: 'list -a', description: 'List available access points' },
+      { command: 'scanap', description: '扫描接入点' },
+      { command: 'list -a', description: '列出可用接入点' },
       {
         command: 'select -a {targets}',
-        description: 'Select target access points',
+        description: '选择目标接入点',
         requiresInput: true,
-        inputLabel: 'Target AP indices (comma-separated)',
+        inputLabel: '目标 AP 索引（逗号分隔）',
         placeholder: '0,1'
       },
-      { command: 'list -a', description: 'Verify selected access points' },
-      { command: 'attack -t deauth', description: 'Execute deauthentication flood' }
+      { command: 'list -a', description: '确认所选接入点' },
+      { command: 'attack -t deauth', description: '执行去认证洪泛攻击' }
     ]
   },
   {
     id: 'targeted-deauth',
-    name: 'Targeted Deauthentication',
-    description: 'Targets specific stations connected to selected APs.',
+    name: '定向去认证',
+    description: '针对连接至所选 AP 的特定终端。',
     steps: [
-      { command: 'scanap', description: 'Scan for access points' },
-      { command: 'list -a', description: 'List available access points' },
+      { command: 'scanap', description: '扫描接入点' },
+      { command: 'list -a', description: '列出可用接入点' },
       {
         command: 'select -a {apTargets}',
-        description: 'Select target access points',
+        description: '选择目标接入点',
         requiresInput: true,
-        inputLabel: 'Target AP indices (comma-separated)',
+        inputLabel: '目标 AP 索引（逗号分隔）',
         placeholder: '0,1'
       },
-      { command: 'list -a', description: 'Verify selected access points' },
-      { command: 'scansta', description: 'Scan for stations' },
-      { command: 'list -c', description: 'List available stations' },
+      { command: 'list -a', description: '确认所选接入点' },
+      { command: 'scansta', description: '扫描终端' },
+      { command: 'list -c', description: '列出可用终端' },
       {
         command: 'select -c {staTargets}',
-        description: 'Select target stations',
+        description: '选择目标终端',
         requiresInput: true,
-        inputLabel: 'Target station indices (comma-separated)',
+        inputLabel: '目标终端索引（逗号分隔）',
         placeholder: '0,12'
       },
-      { command: 'list -c', description: 'Verify selected stations' },
-      { command: 'attack -t deauth -c', description: 'Execute targeted deauthentication' }
+      { command: 'list -c', description: '确认所选终端' },
+      { command: 'attack -t deauth -c', description: '执行定向去认证' }
     ]
   },
   {
     id: 'manual-deauth',
-    name: 'Manual Deauthentication',
-    description: 'Manually specified source and destination for deauth frames.',
+    name: '手动去认证',
+    description: '自定义去认证帧的源地址与目标地址。',
     steps: [
       {
         command: 'attack -t deauth -s {source} -d {dest}',
-        description: 'Execute manual deauthentication attack',
+        description: '执行手动去认证攻击',
         requiresInput: true,
-        inputLabel: 'Source MAC',
+        inputLabel: '源 MAC',
         placeholder: '00:00:00:00:00:00',
         requiresSecondInput: true,
-        secondInputLabel: 'Destination MAC',
+        secondInputLabel: '目标 MAC',
         secondPlaceholder: 'ff:ff:ff:ff:ff:ff'
       }
     ]
   },
   {
     id: 'signal-monitor',
-    name: 'Signal Monitor',
-    description: 'Monitor signal strength of selected access points.',
+    name: '信号监测',
+    description: '监控所选接入点的信号强度。',
     steps: [
-      { command: 'scanap', description: 'Scan for access points' },
-      { command: 'list -a', description: 'List available access points' },
+      { command: 'scanap', description: '扫描接入点' },
+      { command: 'list -a', description: '列出可用接入点' },
       {
         command: 'select -a {targets}',
-        description: 'Select target access points',
+        description: '选择目标接入点',
         requiresInput: true,
-        inputLabel: 'Target AP indices (comma-separated)',
+        inputLabel: '目标 AP 索引（逗号分隔）',
         placeholder: '0,1'
       },
-      { command: 'list -a', description: 'Verify selected access points' },
-      { command: 'sigmon', description: 'Start signal monitoring' }
+      { command: 'list -a', description: '确认所选接入点' },
+      { command: 'sigmon', description: '启动信号监测' }
     ]
   }
 ]
 
 const openWorkflow = (workflow) => {
-  console.log('Opening workflow:', workflow) // Debug log
+  console.log('正在打开工作流：', workflow) // 调试日志
   selectedWorkflow.value = workflow
 }
 
 const executeWorkflow = async (commands) => {
-  console.log('Executing commands:', commands) // Debug log
+  console.log('执行命令序列：', commands) // 调试日志
   for (const command of commands) {
     await serialConnection.sendCommand(command)
-    // Add small delay between commands
+    // 命令之间留出短暂间隔
     await new Promise(resolve => setTimeout(resolve, 500))
   }
   selectedWorkflow.value = null
 }
 
 const handleConnect = async () => {
-  console.log('Attempting to connect...')
+  console.log('尝试连接...')
   try {
     await serialConnection.connect()
   } catch (error) {
-    console.error('Connection error:', error)
+    console.error('连接错误：', error)
   }
 }
 
 const handleDisconnect = async () => {
-  console.log('Attempting to disconnect...')
+  console.log('尝试断开...')
   try {
     await serialConnection.disconnect()
   } catch (error) {
-    console.error('Disconnection error:', error)
+    console.error('断开错误：', error)
   }
 }
 
@@ -319,7 +319,7 @@ const sendCommand = async (cmd) => {
   try {
     await serialConnection.sendCommand(cmd)
   } catch (error) {
-    console.error('Command error:', error)
+    console.error('命令错误：', error)
   }
 }
 
@@ -328,16 +328,16 @@ const toggleDemoMode = () => {
 
   serialConnection.isDemoMode = isDemoMode.value
   if (isDemoMode.value) {
-    // Initialize demo data
+    // 初始化演示数据
     serialConnection.terminalOutput.value = generateDemoTerminalOutput()
   } else {
-    // Clear demo data
+    // 清空演示数据
     clearInterval(demoUpdateInterval.value)
     serialConnection.terminalOutput.value = []
   }
 }
 
-// Cleanup on component unmount
+// 组件卸载时清理
 onUnmounted(() => {
   if (demoUpdateInterval.value) {
     clearInterval(demoUpdateInterval.value)
